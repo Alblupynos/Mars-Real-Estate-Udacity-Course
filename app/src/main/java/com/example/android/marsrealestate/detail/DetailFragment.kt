@@ -21,19 +21,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 
 /**
  * This [Fragment] will show the detailed information about a selected piece of Mars real estate.
  */
 class DetailFragment : Fragment() {
+
+    private val args: DetailFragmentArgs by navArgs()
+    private val viewModel: DetailViewModel by viewModels(
+            factoryProducer = { DetailViewModelFactory(args.selectedProperty, requireActivity().application) })
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        @Suppress("UNUSED_VARIABLE")
-        val application = requireNotNull(activity).application
         val binding = FragmentDetailBinding.inflate(inflater)
+
+        binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
         return binding.root
     }
 }

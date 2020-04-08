@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
 
@@ -48,7 +50,14 @@ class OverviewFragment : Fragment() {
         // Giving the binding access to the OverviewViewModel
         binding.viewModel = viewModel
 
-        binding.photosGrid.adapter = PhotoGridAdapter()
+        viewModel.navigateToSelectedProperty.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                this.findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
+                viewModel.displayPropertyDetailsComplete()
+            }
+        })
+
+        binding.photosGrid.adapter = PhotoGridAdapter { marsProperty -> viewModel.displayPropertyDetails(marsProperty) }
 
         setHasOptionsMenu(true)
         return binding.root
